@@ -1,0 +1,15 @@
+{
+  "name": "collinapiupload",
+  "version": "1.0.0",
+  "description": "Discord bot for ItsCollin1478 that API calls for Avi Uploads to alert members of community",
+  "main": "collinapiupload.js",
+  "scripts": {
+    "start": "node collinapiupload.js"
+    
+  },
+  "author": "SwitchUp_",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.6.0"
+  }
+}
