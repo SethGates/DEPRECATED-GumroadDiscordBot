@@ -1,2 +1,2 @@
 # DiscordBot
-Repo for discord bot source code, and various other discord-bot related stuff.
+Repo for discord bots, first project being a specified discord bot performing API calls.
