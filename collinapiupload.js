@@ -1,9 +1,12 @@
 const https = require("https");
 const fs = require("fs");
 
+
 function ckGr() {
   const grToken = process.env.grToken;
+  // GR App
   const url = `https://api.gumroad.com/v2/products?access_token=${grToken}`;
+  //GR App
   const lastProductIds = process.env.lastProductIds;
   let currentProductIds = [];
   let productsUpdated = false;
@@ -50,24 +53,36 @@ function ckGr() {
 }
 
 function updateProductList(data) {
-  process.env.currentProductIds = date;
+  process.env.currentProductIds = data;
 }
 
 function sendBotMsg() {
   console.log("Notifying bot");
+  const grStoreUrl = process.env.grStoreUrl;
   const dcWhId = process.env.dcWhId;
+  // Disc Bot
   const dcWhToken = process.env.dcWhToken;
-  let url = `https://discord.com/api/webhooks/${dcWhId}/${dcWhToken}`;
+  // Disc Bot
+  const msg = JSON.stringify({
+    'content': `There's a new product!\nMore info at:${grStoreUrl}`
+  });
 
-  const request = https.request(url, (response) => {
+  const host = "discord.com";
+  const dcPath = `/api/webhooks/${dcWhId}/${dcWhToken}`;
+  const opt = {
+    hostname: host,
+    method: 'POST',
+    path: dcPath,
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': msg.length
+    }
+  }
+
+  const request = https.request(opt, (response) => {
     let data = "";
     response.on("data", (chunk) => {
       data = data + chunk.toString();
-    });
-
-    response.on("end", () => {
-      const body = JSON.parse(data);
-      console.log(body);
     });
   });
 
@@ -75,8 +90,9 @@ function sendBotMsg() {
     console.log("An error", error);
   });
 
+  request.write(msg);
   request.end();
 }
 
-const interval = 216000;  // every 60 mins
+const interval = 10000; //216000;  // every 60 mins
 setInterval(ckGr, interval);
