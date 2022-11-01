@@ -3,7 +3,9 @@ const fs = require("fs");
 
 function ckGr() {
   const grToken = process.env.grToken;
+  // GR App
   const url = `https://api.gumroad.com/v2/products?access_token=${grToken}`;
+  //GR App
   const lastProductIds = process.env.lastProductIds;
   let currentProductIds = [];
   let productsUpdated = false;
@@ -56,7 +58,9 @@ function updateProductList(data) {
 function sendBotMsg() {
   console.log("Notifying bot");
   const dcWhId = process.env.dcWhId;
+  // Disc Bot
   const dcWhToken = process.env.dcWhToken;
+  // Disc Bot
   let url = `https://discord.com/api/webhooks/${dcWhId}/${dcWhToken}`;
 
   const request = https.request(url, (response) => {
