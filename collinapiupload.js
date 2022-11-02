@@ -1,3 +1,6 @@
+// Written by Seth Gates, and Jason Newell
+// Env variables are stored on a seperate SaaS
+
 const https = require("https");
 const fs = require("fs");
 
@@ -7,7 +10,7 @@ function ckGr() {
   // GR App
   const url = `https://api.gumroad.com/v2/products?access_token=${grToken}`;
   //GR App
-  const lastProductIds = process.env.lastProductIds;
+  const lastProductIds = JSON.parse(process.env.lastProductIds);
   let currentProductIds = [];
   let productsUpdated = false;
 
@@ -60,9 +63,9 @@ function sendBotMsg() {
   console.log("Notifying bot");
   const grStoreUrl = process.env.grStoreUrl;
   const dcWhId = process.env.dcWhId;
-  // Disc Bot
+  // Disc Bot // 
   const dcWhToken = process.env.dcWhToken;
-  // Disc Bot
+  // Disc Bot // 
   const msg = JSON.stringify({
     'content': `There's a new product!\nMore info at:${grStoreUrl}`
   });
@@ -94,5 +97,5 @@ function sendBotMsg() {
   request.end();
 }
 
-const interval = 10000; //216000;  // every 60 mins
+const interval = 216000;  // every 60 mins
 setInterval(ckGr, interval);
