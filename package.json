@@ -10,6 +10,6 @@
   "author": "SwitchUp_",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^14.6.0"
+    "simple-json-db": "^2.0.0"
   }
 }

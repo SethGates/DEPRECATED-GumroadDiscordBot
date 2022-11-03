@@ -3,14 +3,17 @@
 
 const https = require("https");
 const fs = require("fs");
+const JSONdb = require("simple-json-db");
+const db = new JSONdb("productIds.json");
 
+if (db.get('lastProductIds') == undefined) { db.set('lastProductIds', []); }
 
 function ckGr() {
   const grToken = process.env.grToken;
   // GR App
   const url = `https://api.gumroad.com/v2/products?access_token=${grToken}`;
   //GR App
-  const lastProductIds = JSON.parse(process.env.lastProductIds);
+  const lastProductIds = db.get("lastProductIds");
   let currentProductIds = [];
   let productsUpdated = false;
 
@@ -22,7 +25,7 @@ function ckGr() {
 
     response.on("end", () => {
       const body = JSON.parse(data);
-      //console.log(data.products);
+      console.log(data.products);
       if (body.success) {
 
         for (product of body.products) {
@@ -56,7 +59,8 @@ function ckGr() {
 }
 
 function updateProductList(data) {
-  process.env.currentProductIds = data;
+  //process.env.lastProductIds = data;
+  db.set('lastProducts', data);
 }
 
 function sendBotMsg() {
@@ -97,5 +101,5 @@ function sendBotMsg() {
   request.end();
 }
 
-const interval = 216000;  // every 60 mins
+const interval = 1000; //216000;  // every 60 mins
 setInterval(ckGr, interval);
