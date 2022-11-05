@@ -6,7 +6,10 @@ const fs = require("fs");
 const JSONdb = require("simple-json-db");
 const db = new JSONdb("productIds.json");
 
-if (db.get('lastProductIds') == undefined) { db.set('lastProductIds', []); }
+if (db.get("lastProductIds") == undefined) {
+  db.set("lastProductIds", []);
+  // AWS / Persistent ID storage
+}
 
 function ckGr() {
   const grToken = process.env.grToken;
@@ -27,12 +30,11 @@ function ckGr() {
       const body = JSON.parse(data);
       console.log(data.products);
       if (body.success) {
-
         for (product of body.products) {
           currentProductIds.push(product.id);
 
           if (lastProductIds.indexOf(product.id) < 0) {
-            console.log('New product found');
+            console.log("New product found");
             productsUpdated = true;
           }
         }
@@ -43,8 +45,8 @@ function ckGr() {
           updateProductList(JSON.stringify(currentProductIds));
           sendBotMsg();
           console.log("New products were found."); // log to console so we can see results in monitor console
-        } else { 
-            console.log("No updates found");
+        } else {
+          console.log("No updates found");
         }
       }
     });
@@ -55,36 +57,37 @@ function ckGr() {
   });
 
   request.end();
- 
 }
 
 function updateProductList(data) {
   //process.env.lastProductIds = data;
-  db.set('lastProducts', data);
+  db.set("lastProducts", data);
 }
 
 function sendBotMsg() {
   console.log("Notifying bot");
   const grStoreUrl = process.env.grStoreUrl;
-  const dcWhId = process.env.dcWhId;
-  // Disc Bot // 
-  const dcWhToken = process.env.dcWhToken;
-  // Disc Bot // 
+  const dcAppId = process.env.dcAppId;
+  // Disc Bot //
+  const dcToken = process.env.dcToken;
+  // Disc Bot //
   const msg = JSON.stringify({
-    'content': `There's a new product!\nMore info at:${grStoreUrl}`
+    content: `There's a new product!\nMore info at:${grStoreUrl}`,
   });
 
   const host = "discord.com";
-  const dcPath = `/api/webhooks/${dcWhId}/${dcWhToken}`;
+  const dcPath = `/api/webhooks/${dcAppId}/${dcToken}`;
+  // dc path to change to Bot API (Channel message, in Discord docs. What is needed for headers?)
+  // Other IDS in Env, for message
   const opt = {
     hostname: host,
-    method: 'POST',
+    method: "POST",
     path: dcPath,
     headers: {
-      'Content-Type': 'application/json',
-      'Content-Length': msg.length
-    }
-  }
+      "Content-Type": "application/json",
+      "Content-Length": msg.length,
+    },
+  };
 
   const request = https.request(opt, (response) => {
     let data = "";
